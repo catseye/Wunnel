@@ -19,6 +19,9 @@
     font-family: monospace;
     float: left;
 }
+#tape_display {
+    border: 1px solid black;
+}
 #output {
     color: white;
     background: #008000;
@@ -49,6 +52,10 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 <div id="display_container">
   <pre id="program_display"></pre>
   <pre id="op_table_display"></pre>
+  <div style="clear: both"></div>
+  <canvas id="tape_display" width="400" height="100"></canvas><br />
+  Input: <input id="input"></input><br />
+  Output: <div id="output"></div>
 </div>
 
 <textarea id="program" rows="25" cols="40"></textarea>
@@ -82,6 +89,31 @@ o oooooooo     o
          o    oooo o
 </div>
 
+<div id="just-end" class="example_program"
+>.
+
+
+  o
+  
+  
+o o</div>
+
+<div id="experiment" class="example_program"
+>.    .
+
+
+
+    oo o
+    o  o
+
+
+o    o
+
+
+
+o    o
+</div>
+
 </body>
 <script src="../src/yoob/playfield.js"></script>
 <script src="../src/yoob/playfield-html-view.js"></script>
@@ -102,7 +134,10 @@ o oooooooo     o
   };
   var c = (new WunnelController()).init({
       programView: programView,
-      opTableView: opTableView
+      opTableView: opTableView,
+      tapeCanvas: document.getElementById("tape_display"),
+      inputElem: document.getElementById("input"),
+      outputElem: document.getElementById("output")
   });
   c.connect({
     'start': 'start',

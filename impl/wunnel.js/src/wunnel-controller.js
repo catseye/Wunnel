@@ -3,10 +3,15 @@
  * requires yoob.Playfield
  * requires yoob.Cursor
  * requires yoob.Tape
- * ...VERY INCOMPLETE.
+ * ...INCOMPLETE.
  */
 function WunnelPlayfield() {
     this.setDefault(' ');
+    
+    this.inBounds = function(x, y) {
+        return (x >= this.minX && x <= this.maxX &&
+                y >= this.minY && y <= this.maxY);
+    };
 };
 WunnelPlayfield.prototype = new yoob.Playfield();
 
@@ -50,11 +55,6 @@ OperationTable.prototype = new yoob.Playfield();
 
 
 function OpTableCursor() {
-    this.getX = function() { return this.x; }
-    this.getY = function() { return this.y; }
-    this.setX = function(x) { this.x = x; }
-    this.setY = function(y) { this.y = y; }
-    
     this.advance = function() {
         this.x += this.dx;
         if (this.x < 0) this.x = 5;
@@ -83,6 +83,9 @@ function WunnelController() {
     this.init = function(cfg) {
         this.programView = cfg.programView;
         this.opTableView = cfg.opTableView;
+        this.tapeCanvas = cfg.tapeCanvas;
+        this.inputElem = cfg.inputElem;
+        this.outputElem = cfg.outputElem;
 
         pf = new WunnelPlayfield();
         ip = new WunnelCursor(0, 0, 1, 1);
@@ -109,13 +112,15 @@ function WunnelController() {
     };
 
     this.step = function() {
+        if (halted) return;
+
         var instruction = pf.get(ip.x, ip.y);
         var k = optab.get(opp.x, opp.y);
 
         if (this.genusMoreThanZero(instruction)) {
             if (k === 'END') {
                 halted = true;
-                return errors;
+                return;
             } else if (k === 'NOP') {
             } else if (k === 'SHU') {
                 if (ip.isHeaded(-1, 0)) {
@@ -143,38 +148,27 @@ function WunnelController() {
             } else if (k === 'PLU') {
                 tape.put(head, 1);
             } else if (k === 'OUT') {
-                var i = tape.get(head);
-                if (i === 0) {
-                    //world.output(new CharacterElement('0'));
-                } else {
-                    //world.output(new CharacterElement('1'));
-                }
+                this.outputElem.innerHTML += (tape.get(head) === 0 ? '0' : '1');
             } else if (k === 'INP') {
-                var c = '0'; // world.inputCharacter();
-                if (c == null) {
+                var c = this.inputElem.value;
+                if (c === '') {
                     needsInput = true;
-                    return errors;
+                    halted = true; // XXX
+                    return;
                 }
-                if (c === '1') {
-                    tape.put(head, 1);
-                } else {
-                    tape.put(head, 0);
-                }
+                tape.put(head, c.charAt(0) === '1' ? 1 : 0);
+                this.inputElem.value = c.substr(1);
             }
         } else {
             opp.advance();
         }
 
         ip.advance();
-        /*
-        if (playfield.hasFallenOffEdge(ip)) {
+        if (!pf.inBounds(ip.x, ip.y)) {
             halted = true;
         }
-        */
 
-        this.programView.draw();
-        this.opTableView.draw();
-
+        this.draw();
         needsInput = false;
     }
 
@@ -193,8 +187,15 @@ function WunnelController() {
 
         tape = new yoob.Tape();
         head = 0;
+
+        halted = false;
+        this.draw();
+    };
+    
+    this.draw = function() {
         this.programView.draw();
         this.opTableView.draw();
+        tape.drawCanvas(this.tapeCanvas, 12, 12, []);
     };
 };
 WunnelController.prototype = new yoob.Controller();
