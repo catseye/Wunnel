@@ -188,6 +188,9 @@ function WunnelController() {
         tape = new yoob.Tape();
         head = 0;
 
+        this.inputElem.value = "";
+        this.outputElem.innerHTML = "";
+
         halted = false;
         this.draw();
     };
