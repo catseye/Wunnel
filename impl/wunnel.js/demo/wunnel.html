@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>Wunnel</title>
+  <style>
+#program { display: none; }
+#load { display: none; }
+#display {
+    color: white;
+    background: blue;
+    border: 3px solid blue;
+    font-family: monospace;
+}
+#output {
+    color: white;
+    background: #008000;
+    border: 3px solid #008000;
+    font-family: monospace;
+}
+#canvas { border: 1px solid blue; display: none; }
+.example_program {
+    display: none;
+}
+  </style>
+</head>
+<body>
+
+<h1>Wunnel</h1>
+
+<button id="load">Load</button>
+<button id="edit">Edit</button>
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<button id="step">Step</button>
+Speed: <input id="speed" type="range" min="0" max="200" value="0" />
+
+<div>
+  example source: <select id="select_source"></select>
+</div>
+
+<div id="display_container">
+  <pre id="display"></pre>
+</div>
+
+<textarea id="program" rows="25" cols="40"></textarea>
+
+<div id="bitwise-cat" class="example_program"
+>          o   ooo  o
+
+
+o
+o
+o
+o         o
+o         o
+o         o
+o         o
+o
+o        o     o
+o         o
+o
+o        o
+o              o
+o        o     o
+o              o
+
+         o
+o oooooooo     o
+         o
+         o
+         o
+
+         o    oooo o
+</div>
+
+</body>
+<script src="../src/yoob/playfield.js"></script>
+<script src="../src/yoob/playfield-html-view.js"></script>
+<script src="../src/yoob/cursor.js"></script>
+<script src="../src/yoob/tape.js"></script>
+<script src="../src/yoob/controller.js"></script>
+<script src="../src/yoob/example-manager.js"></script>
+<script src="../src/wunnel-controller.js"></script>
+<script>
+  var v = new yoob.PlayfieldHTMLView().init(
+    null, document.getElementById('display')
+  );
+  var c = (new WunnelController()).init(v);
+  c.connect({
+    'start': 'start',
+    'stop': 'stop',
+    'step': 'step',
+    'load': 'load',
+    'edit': 'edit',
+    'speed': 'speed',
+    'select': 'select_source',
+    'source': 'program',
+    'display': 'display_container'
+  });
+  c.click_load();
+  e = (new yoob.ExampleManager()).init({
+    selectElem: document.getElementById('select_source'),
+    controller: c
+  }).populateFromClass('example_program');
+</script>
