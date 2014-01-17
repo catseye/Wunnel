@@ -2,6 +2,7 @@
  * requires yoob.Controller
  * requires yoob.Playfield
  * requires yoob.Cursor
+ * requires yoob.Tape
  * ...VERY INCOMPLETE.
  */
 function WunnelPlayfield() {
@@ -19,24 +20,80 @@ function WunnelCursor() {
 WunnelCursor.prototype = new yoob.Cursor();
 
 
+function OperationTable() {
+    this.init = function() {
+        this.clear();
+        var table =
+          "RRS-+N\n" +
+          "<S>0N0\n" +
+          ">I<N+-\n" +
+          "NOSS<E\n" +
+          "SEN>SE\n" +
+          "RNRRRR\n";
+        var map = {
+          'R': 'ROT',
+          'S': 'SHU',
+          'N': 'NOP',
+          '+': 'PLU',
+          '-': 'NEG',
+          '0': 'BLA',
+          '<': 'LEF',
+          '>': 'RIG',
+          'E': 'END',
+          'O': 'OUT',
+          'I': 'INP'
+        };
+        this.load(0, 0, table, function(x) { return map[x] });
+    };
+};
+OperationTable.prototype = new yoob.Playfield();
+
+
+function OpTableCursor() {
+    this.getX = function() { return this.x; }
+    this.getY = function() { return this.y; }
+    this.setX = function(x) { this.x = x; }
+    this.setY = function(y) { this.y = y; }
+    
+    this.advance = function() {
+        this.x += this.dx;
+        if (this.x < 0) this.x = 5;
+        if (this.x > 5) this.x = 0;
+        this.y += this.dy;
+        if (this.y < 0) this.y = 5;
+        if (this.y > 5) this.y = 0;        
+    };
+};
+OpTableCursor.prototype = new yoob.Cursor();
+
+
 function WunnelController() {
     var pf;
     var ip;
+
+    var optab;
     var opp;
+
     var tape;
     var head;
 
     var halted;
     var needsInput;
 
-    this.init = function(view) {
+    this.init = function(cfg) {
+        this.programView = cfg.programView;
+        this.opTableView = cfg.opTableView;
+
         pf = new WunnelPlayfield();
-
         ip = new WunnelCursor(0, 0, 1, 1);
-        opp = new WunnelCursor(0, 0, 1, 1);
+        this.programView.pf = pf;
+        this.programView.setCursors([ip]);
 
-        view.pf = pf;
-        this.view = view.setCursors([ip]);
+        optab = new OperationTable();
+        optab.init();
+        opp = new OpTableCursor(0, 0, 1, 1);
+        this.opTableView.pf = optab;
+        this.opTableView.setCursors([opp]);
 
         return this;
     };
@@ -52,12 +109,8 @@ function WunnelController() {
     };
 
     this.step = function() {
-
-        //BasicCursor<CharacterElement> ip = playfield.getCursor(0);
-        //BasicCursor<Operation> opp = opTable.getCursor(0);
-        //BasicHead<IntegerElement> h = tape.getHead(0);
         var instruction = pf.get(ip.x, ip.y);
-        var k = 'BLA'; // operations.get(opp.x, opp.y);
+        var k = optab.get(opp.x, opp.y);
 
         if (this.genusMoreThanZero(instruction)) {
             if (k === 'END') {
@@ -66,13 +119,13 @@ function WunnelController() {
             } else if (k === 'NOP') {
             } else if (k === 'SHU') {
                 if (ip.isHeaded(-1, 0)) {
-                    ip.setY(ip.getY() - h.read());
+                    ip.setY(ip.getY() - tape.get(head));
                 } else if (ip.isHeaded(1, 0)) {
-                    ip.setY(ip.getY() + h.read());
+                    ip.setY(ip.getY() + tape.get(head));
                 } else if (ip.isHeaded(0, -1)) {
-                    ip.setX(ip.getX() + h.read());
+                    ip.setX(ip.getX() + tape.get(head));
                 } else if (ip.isHeaded(0, 1)) {
-                    ip.setX(ip.getX() - h.read());
+                    ip.setX(ip.getX() - tape.get(head));
                 }
             } else if (k === 'ROT') {
                 ip.rotateCounterclockwise();
@@ -119,7 +172,8 @@ function WunnelController() {
         }
         */
 
-        this.view.draw();
+        this.programView.draw();
+        this.opTableView.draw();
 
         needsInput = false;
     }
@@ -131,9 +185,16 @@ function WunnelController() {
         ip.y = 0;
         ip.dx = 0;
         ip.dy = 1;
+
+        opp.x = 0;
+        opp.y = 0;
+        opp.dx = 0;
+        opp.dy = 1;
+
         tape = new yoob.Tape();
         head = 0;
-        this.view.draw();
+        this.programView.draw();
+        this.opTableView.draw();
     };
 };
 WunnelController.prototype = new yoob.Controller();

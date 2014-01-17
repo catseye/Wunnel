@@ -5,11 +5,19 @@
   <style>
 #program { display: none; }
 #load { display: none; }
-#display {
+#program_display {
     color: white;
     background: blue;
     border: 3px solid blue;
     font-family: monospace;
+    float: left;
+}
+#op_table_display {
+    color: black;
+    background: white;
+    border: 3px solid red;
+    font-family: monospace;
+    float: left;
 }
 #output {
     color: white;
@@ -39,7 +47,8 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 </div>
 
 <div id="display_container">
-  <pre id="display"></pre>
+  <pre id="program_display"></pre>
+  <pre id="op_table_display"></pre>
 </div>
 
 <textarea id="program" rows="25" cols="40"></textarea>
@@ -82,10 +91,19 @@ o oooooooo     o
 <script src="../src/yoob/example-manager.js"></script>
 <script src="../src/wunnel-controller.js"></script>
 <script>
-  var v = new yoob.PlayfieldHTMLView().init(
-    null, document.getElementById('display')
+  var programView = new yoob.PlayfieldHTMLView().init(
+    null, document.getElementById('program_display')
   );
-  var c = (new WunnelController()).init(v);
+  var opTableView = new yoob.PlayfieldHTMLView().init(
+    null, document.getElementById('op_table_display')
+  );
+  opTableView.render = function(value) {
+        return ' ' + value + ' ';
+  };
+  var c = (new WunnelController()).init({
+      programView: programView,
+      opTableView: opTableView
+  });
   c.connect({
     'start': 'start',
     'stop': 'stop',
