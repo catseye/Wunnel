@@ -77,9 +77,6 @@ function WunnelController() {
     var tape;
     var head;
 
-    var halted;
-    var needsInput;
-
     this.init = function(cfg) {
         this.programView = cfg.programView;
         this.opTableView = cfg.opTableView;
@@ -112,15 +109,12 @@ function WunnelController() {
     };
 
     this.step = function() {
-        if (halted) return;
-
         var instruction = pf.get(ip.x, ip.y);
         var k = optab.get(opp.x, opp.y);
 
         if (this.genusMoreThanZero(instruction)) {
             if (k === 'END') {
-                halted = true;
-                return;
+                return 'stop';
             } else if (k === 'NOP') {
             } else if (k === 'SHU') {
                 if (ip.isHeaded(-1, 0)) {
@@ -152,9 +146,7 @@ function WunnelController() {
             } else if (k === 'INP') {
                 var c = this.inputElem.value;
                 if (c === '') {
-                    needsInput = true;
-                    halted = true; // XXX
-                    return;
+                    return 'block';
                 }
                 tape.put(head, c.charAt(0) === '1' ? 1 : 0);
                 this.inputElem.value = c.substr(1);
@@ -165,12 +157,11 @@ function WunnelController() {
 
         ip.advance();
         if (!pf.inBounds(ip.x, ip.y)) {
-            halted = true;
+            return 'stop';
         }
 
         this.draw();
-        needsInput = false;
-    }
+    };
 
     this.load = function(text) {
         pf.clear();
@@ -191,7 +182,6 @@ function WunnelController() {
         this.inputElem.value = "";
         this.outputElem.innerHTML = "";
 
-        halted = false;
         this.draw();
     };
     
