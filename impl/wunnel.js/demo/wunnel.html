@@ -125,7 +125,7 @@ o    o
 <script src="../src/yoob/cursor.js"></script>
 <script src="../src/yoob/tape.js"></script>
 <script src="../src/yoob/controller.js"></script>
-<script src="../src/yoob/example-manager.js"></script>
+<script src="../src/yoob/preset-manager.js"></script>
 <script src="../src/wunnel-controller.js"></script>
 <script>
   var programView = new yoob.PlayfieldHTMLView().init(
@@ -156,7 +156,7 @@ o    o
     'display': 'display_container'
   });
   c.click_load();
-  e = (new yoob.ExampleManager()).init({
+  e = (new yoob.PresetManager()).init({
     selectElem: document.getElementById('select_source'),
     controller: c
   }).populateFromClass('example_program');
