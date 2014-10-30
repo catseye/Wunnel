@@ -151,12 +151,11 @@ o    o
     'load': 'load',
     'edit': 'edit',
     'speed': 'speed',
-    'select': 'select_source',
     'source': 'program',
     'display': 'display_container'
   });
   c.click_load();
-  e = (new yoob.PresetManager()).init({
+  (new yoob.PresetManager()).init({
     selectElem: document.getElementById('select_source'),
     controller: c
   }).populateFromClass('example_program');
