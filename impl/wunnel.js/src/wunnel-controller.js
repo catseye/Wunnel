@@ -3,7 +3,6 @@
  * requires yoob.Playfield
  * requires yoob.Cursor
  * requires yoob.Tape
- * ...INCOMPLETE.
  */
 function WunnelPlayfield() {
     this.setDefault(' ');
@@ -14,15 +13,6 @@ function WunnelPlayfield() {
     };
 };
 WunnelPlayfield.prototype = new yoob.Playfield();
-
-
-function WunnelCursor() {
-    this.getX = function() { return this.x; }
-    this.getY = function() { return this.y; }
-    this.setX = function(x) { this.x = x; }
-    this.setY = function(y) { this.y = y; }
-};
-WunnelCursor.prototype = new yoob.Cursor();
 
 
 function OperationTable() {
@@ -85,7 +75,7 @@ function WunnelController() {
         this.outputElem = cfg.outputElem;
 
         pf = new WunnelPlayfield();
-        ip = new WunnelCursor(0, 0, 1, 1);
+        ip = new yoob.Cursor(0, 0, 1, 1);
         this.programView.pf = pf;
         this.programView.setCursors([ip]);
 
