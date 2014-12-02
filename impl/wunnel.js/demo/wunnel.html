@@ -46,6 +46,7 @@
 <button id="edit">Edit</button>
 <button id="start">Start</button>
 <button id="stop">Stop</button>
+<button id="reset">Reset</button>
 <button id="step">Step</button>
 Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 
@@ -147,6 +148,7 @@ o    o
   c.connect({
     'start': 'start',
     'stop': 'stop',
+    'reset': 'reset',
     'step': 'step',
     'load': 'load',
     'edit': 'edit',
