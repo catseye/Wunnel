@@ -33,9 +33,6 @@
     font-family: monospace;
 }
 #canvas { border: 1px solid blue; display: none; }
-.example_program {
-    display: none;
-}
   </style>
 </head>
 <body>
@@ -66,60 +63,6 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 
 <textarea id="program" rows="25" cols="40"></textarea>
 
-<div id="bitwise-cat" class="example_program"
->          o   ooo  o
-
-
-o
-o
-o
-o         o
-o         o
-o         o
-o         o
-o
-o        o     o
-o         o
-o
-o        o
-o              o
-o        o     o
-o              o
-
-         o
-o oooooooo     o
-         o
-         o
-         o
-
-         o    oooo o
-</div>
-
-<div id="just-end" class="example_program"
->.
-
-
-  o
-  
-  
-o o</div>
-
-<div id="experiment" class="example_program"
->.    .
-
-
-
-    oo o
-    o  o
-
-
-o    o
-
-
-
-o    o
-</div>
-
 </body>
 <script src="../src/yoob/playfield.js"></script>
 <script src="../src/yoob/playfield-html-view.js"></script>
@@ -128,6 +71,7 @@ o    o
 <script src="../src/yoob/controller.js"></script>
 <script src="../src/yoob/preset-manager.js"></script>
 <script src="../src/wunnel-controller.js"></script>
+<script src="../../../eg/index.js"></script>
 <script>
   var programView = new yoob.PlayfieldHTMLView().init(
     null, document.getElementById('program_display')
@@ -157,8 +101,17 @@ o    o
     'display': 'display_container'
   });
   c.click_load();
-  (new yoob.PresetManager()).init({
+  var p = (new yoob.PresetManager()).init({
     selectElem: document.getElementById('select_source'),
     controller: c
-  }).populateFromClass('example_program').select('bitwise-cat');
+  });
+  function makeCallback(sourceText) {
+    return function(id) {
+      c.loadSource(sourceText);
+    }
+  }
+  for (var i = 0; i < examplePrograms.length; i++) {
+    p.add(examplePrograms[i][0], makeCallback(examplePrograms[i][1]));
+  }
+  p.select(examplePrograms[0][0]);
 </script>
