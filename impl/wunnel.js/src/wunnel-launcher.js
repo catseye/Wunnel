@@ -51,7 +51,7 @@ function launch(prefix, container, config) {
         editor: editor,
         hideDuringEdit: [display],
         disableDuringEdit: [controller.panel],
-        storageKey: 'etcha.js',
+        storageKey: 'wunnel.js',
         onDone: function() {
             controller.performReset(this.getEditorText());
         }
