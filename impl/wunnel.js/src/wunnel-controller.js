@@ -114,13 +114,13 @@ function getWunnelControllerClass() {
                 } else if (k === 'NOP') {
                 } else if (k === 'SHU') {
                     if (ip.isHeaded(-1, 0)) {
-                        ip.setY(ip.getY() - tape.get(head));
+                        ip.setY(ip.getY() - tape.read());
                     } else if (ip.isHeaded(1, 0)) {
-                        ip.setY(ip.getY() + tape.get(head));
+                        ip.setY(ip.getY() + tape.read());
                     } else if (ip.isHeaded(0, -1)) {
-                        ip.setX(ip.getX() + tape.get(head));
+                        ip.setX(ip.getX() + tape.read());
                     } else if (ip.isHeaded(0, 1)) {
-                        ip.setX(ip.getX() - tape.get(head));
+                        ip.setX(ip.getX() - tape.read());
                     }
                 } else if (k === 'ROT') {
                     ip.rotateCounterclockwise();
@@ -128,23 +128,23 @@ function getWunnelControllerClass() {
                     opp.rotateCounterclockwise();
                     opp.rotateCounterclockwise();
                 } else if (k === 'LEF') {
-                    head--;
+                    head.moveLeft();
                 } else if (k === 'RIG') {
-                    head++;
+                    head.moveRight();
                 } else if (k === 'NEG') {
-                    tape.put(head, -1);
+                    tape.write(-1);
                 } else if (k === 'BLA') {
-                    tape.put(head, 0);
+                    tape.write(0);
                 } else if (k === 'PLU') {
-                    tape.put(head, 1);
+                    tape.write(1);
                 } else if (k === 'OUT') {
-                    this.outputElem.innerHTML += (tape.get(head) === 0 ? '0' : '1');
+                    this.outputElem.innerHTML += (tape.read() === 0 ? '0' : '1');
                 } else if (k === 'INP') {
                     var c = this.inputElem.value;
                     if (c === '') {
                         return 'block';
                     }
-                    tape.put(head, c.charAt(0) === '1' ? 1 : 0);
+                    tape.write(c.charAt(0) === '1' ? 1 : 0);
                     this.inputElem.value = c.substr(1);
                 }
             } else {
@@ -172,9 +172,11 @@ function getWunnelControllerClass() {
             opp.dx = 0;
             opp.dy = 1;
 
-            tape = (new yoob.Tape()).init({});
+            head = (new yoob.Cursor()).init();
+            tape = (new yoob.Tape()).init({
+                cursors: [head]
+            });
             this.tapeView.setTape(tape);
-            head = 0;
 
             this.inputElem.value = "";
             this.outputElem.innerHTML = "";
