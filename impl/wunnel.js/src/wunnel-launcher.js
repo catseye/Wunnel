@@ -9,6 +9,7 @@ function launch(prefix, container, config) {
     "yoob/playfield-html-view.js",
     "yoob/cursor.js",
     "yoob/tape.js",
+    "yoob/tape-html-view.js",
     "yoob/controller.js",
     "yoob/source-manager.js",
     "yoob/preset-manager.js",
@@ -27,6 +28,9 @@ function launch(prefix, container, config) {
     opTableView.render = function(value) {
           return ' ' + value + ' ';
     };
+    var tapeView = new yoob.TapeHTMLView().init({
+      element: document.getElementById('tape_display')
+    });
 
     var controlPanel = document.getElementById("panel_container");
     var editor = document.getElementById("editor");
@@ -36,7 +40,7 @@ function launch(prefix, container, config) {
     var controller = (new WunnelController()).init({
         programView: programView,
         opTableView: opTableView,
-        tapeCanvas: document.getElementById("tape_display"),
+        tapeView: tapeView,
         inputElem: document.getElementById("input"),
         outputElem: document.getElementById("output"),
         panelContainer: controlPanel

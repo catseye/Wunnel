@@ -76,7 +76,7 @@ function getWunnelControllerClass() {
 
             this.programView = cfg.programView;
             this.opTableView = cfg.opTableView;
-            this.tapeCanvas = cfg.tapeCanvas;
+            this.tapeView = cfg.tapeView;
             this.inputElem = cfg.inputElem;
             this.outputElem = cfg.outputElem;
 
@@ -173,6 +173,7 @@ function getWunnelControllerClass() {
             opp.dy = 1;
 
             tape = (new yoob.Tape()).init({});
+            this.tapeView.setTape(tape);
             head = 0;
 
             this.inputElem.value = "";
@@ -184,7 +185,7 @@ function getWunnelControllerClass() {
         this.draw = function() {
             this.programView.draw();
             this.opTableView.draw();
-            // FIXME tape.drawCanvas(this.tapeCanvas, 12, 12, []);
+            this.tapeView.draw();
         };
     };
     WunnelController.prototype = proto;
