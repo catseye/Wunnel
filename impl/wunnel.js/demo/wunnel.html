@@ -3,18 +3,19 @@
   <meta charset="utf-8">
   <title>Wunnel</title>
   <style>
-#program { display: none; }
-#load { display: none; }
 #program_display {
     color: white;
     background: blue;
     border: 3px solid blue;
     font-family: monospace;
-    float: left;
+    display: inline-block;
+}
+#editor {
+    display: inline-block;
 }
 #state_display {
-    float: left;
     margin-left: 1em;
+    display: inline-block;
 }
 #op_table_display {
     color: black;
@@ -39,12 +40,8 @@
 
 <h1>Wunnel</h1>
 
-<button id="load">Load</button>
-<button id="edit">Edit</button>
-<button id="start">Start</button>
-<button id="stop">Stop</button>
-<button id="reset">Reset</button>
-<button id="step">Step</button>
+<div id="panel_container"></div>
+
 Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 
 <div>
@@ -53,6 +50,7 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
 
 <div id="display_container">
   <pre id="program_display"></pre>
+  <textarea id="editor" rows="25" cols="40"></textarea>
   <div id="state_display">
     <pre id="op_table_display"></pre>
     Tape: <canvas id="tape_display" width="400" height="100"></canvas><br />
@@ -60,8 +58,6 @@ Speed: <input id="speed" type="range" min="0" max="200" value="0" />
     Output: <div id="output"></div>
   </div>
 </div>
-
-<textarea id="program" rows="25" cols="40"></textarea>
 
 </body>
 <script src="../src/wunnel-launcher.js"></script>

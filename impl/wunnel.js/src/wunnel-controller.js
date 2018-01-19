@@ -60,6 +60,7 @@ function getWunnelControllerClass() {
     OpTableCursor.prototype = new yoob.Cursor();
 
 
+    var proto = new yoob.Controller();
     function WunnelController() {
         var pf;
         var ip;
@@ -71,6 +72,8 @@ function getWunnelControllerClass() {
         var head;
 
         this.init = function(cfg) {
+            proto.init.apply(this, [cfg]);
+
             this.programView = cfg.programView;
             this.opTableView = cfg.opTableView;
             this.tapeCanvas = cfg.tapeCanvas;
@@ -79,14 +82,14 @@ function getWunnelControllerClass() {
 
             pf = new WunnelPlayfield();
             ip = new yoob.Cursor(0, 0, 1, 1);
+            pf.setCursors([ip]);
             this.programView.pf = pf;
-            this.programView.setCursors([ip]);
 
             optab = new OperationTable();
             optab.init();
             opp = new OpTableCursor(0, 0, 1, 1);
+            optab.setCursors([opp]);
             this.opTableView.pf = optab;
-            this.opTableView.setCursors([opp]);
 
             return this;
         };
@@ -156,7 +159,7 @@ function getWunnelControllerClass() {
             this.draw();
         };
 
-        this.load = function(text) {
+        this.reset = function(text) {
             pf.clear();
             pf.load(0, 0, text);
             ip.x = 0;
@@ -169,7 +172,7 @@ function getWunnelControllerClass() {
             opp.dx = 0;
             opp.dy = 1;
 
-            tape = new yoob.Tape();
+            tape = (new yoob.Tape()).init({});
             head = 0;
 
             this.inputElem.value = "";
@@ -181,10 +184,10 @@ function getWunnelControllerClass() {
         this.draw = function() {
             this.programView.draw();
             this.opTableView.draw();
-            tape.drawCanvas(this.tapeCanvas, 12, 12, []);
+            // FIXME tape.drawCanvas(this.tapeCanvas, 12, 12, []);
         };
     };
-    WunnelController.prototype = new yoob.Controller();
+    WunnelController.prototype = proto;
 
     return WunnelController;
 }

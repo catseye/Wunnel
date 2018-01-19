@@ -4,11 +4,13 @@ function launch(prefix, container, config) {
   }
   config = config || {};
   var deps = [
+    "yoob/element-factory.js",
     "yoob/playfield.js",
     "yoob/playfield-html-view.js",
     "yoob/cursor.js",
     "yoob/tape.js",
     "yoob/controller.js",
+    "yoob/source-manager.js",
     "yoob/preset-manager.js",
     "wunnel-controller.js"
   ];
@@ -16,42 +18,47 @@ function launch(prefix, container, config) {
   var onload = function() {
     if (++loaded < deps.length) return;
     /* ----- launch ----- */
-    var programView = new yoob.PlayfieldHTMLView().init(
-      null, document.getElementById('program_display')
-    );
-    var opTableView = new yoob.PlayfieldHTMLView().init(
-      null, document.getElementById('op_table_display')
-    );
+    var programView = new yoob.PlayfieldHTMLView().init({
+      element: document.getElementById('program_display')
+    });
+    var opTableView = new yoob.PlayfieldHTMLView().init({
+      element: document.getElementById('op_table_display')
+    });
     opTableView.render = function(value) {
           return ' ' + value + ' ';
     };
+
+    var controlPanel = document.getElementById("panel_container");
+    var editor = document.getElementById("editor");
+    var display = document.getElementById("program_display");
+
     var WunnelController = getWunnelControllerClass();
-    var c = (new WunnelController()).init({
+    var controller = (new WunnelController()).init({
         programView: programView,
         opTableView: opTableView,
         tapeCanvas: document.getElementById("tape_display"),
         inputElem: document.getElementById("input"),
-        outputElem: document.getElementById("output")
+        outputElem: document.getElementById("output"),
+        panelContainer: controlPanel
     });
-    c.connect({
-      'start': 'start',
-      'stop': 'stop',
-      'reset': 'reset',
-      'step': 'step',
-      'load': 'load',
-      'edit': 'edit',
-      'speed': 'speed',
-      'source': 'program',
-      'display': 'program_display'
+
+    var sourceManager = (new yoob.SourceManager()).init({
+        panelContainer: controlPanel,
+        editor: editor,
+        hideDuringEdit: [display],
+        disableDuringEdit: [controller.panel],
+        storageKey: 'etcha.js',
+        onDone: function() {
+            controller.performReset(this.getEditorText());
+        }
     });
-    c.click_load();
     var p = (new yoob.PresetManager()).init({
       selectElem: document.getElementById('select_source'),
-      controller: c
+      controller: controller
     });
     function makeCallback(sourceText) {
       return function(id) {
-        c.loadSource(sourceText);
+        sourceManager.loadSource(sourceText);
       }
     }
     for (var i = 0; i < examplePrograms.length; i++) {
