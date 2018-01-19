@@ -3,37 +3,45 @@
   <meta charset="utf-8">
   <title>Wunnel</title>
   <style>
+#display_container {
+  display: flex;
+}
 #program_display {
-    color: white;
-    background: blue;
-    border: 3px solid blue;
-    font-family: monospace;
-    display: inline-block;
+  color: white;
+  background: blue;
+  border: 3px solid blue;
+  font-family: monospace;
+  display: inline-block;
+  flex: 1 1 auto;
 }
 #editor {
-    display: inline-block;
+  display: inline-block;
+  flex: 1 1 auto;
 }
 #state_display {
-    margin-left: 1em;
-    display: inline-block;
+  margin-left: 1em;
+  display: inline-block;
+  flex: 0 1 auto;
 }
 #op_table_display {
-    color: black;
-    background: white;
-    border: 3px solid red;
-    font-family: monospace;
-    text-align: center;
+  color: black;
+  background: white;
+  border: 3px solid red;
+  font-family: monospace;
+  text-align: center;
 }
 #tape_display {
-    border: 1px solid black;
+  border: 1px solid black;
 }
 #output {
-    color: white;
-    background: #008000;
-    border: 3px solid #008000;
-    font-family: monospace;
+  color: white;
+  background: #008000;
+  border: 3px solid #008000;
+  font-family: monospace;
 }
-#canvas { border: 1px solid blue; display: none; }
+#canvas {
+  border: 1px solid blue; display: none;
+}
   </style>
 </head>
 <body>
