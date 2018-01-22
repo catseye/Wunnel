@@ -18,24 +18,49 @@ function launch(prefix, container, config) {
   var loaded = 0;
   var onload = function() {
     if (++loaded < deps.length) return;
-    /* ----- launch ----- */
-    var programView = new yoob.PlayfieldHTMLView().init({
-      element: document.getElementById('program_display')
+    /* ----- launch, phase 1: create the UI ----- */
+    var controlPanel = yoob.makeDiv(container);
+    controlPanel.id = "panel_container";
+
+    var subPanel = yoob.makeDiv(container);
+    var selectSource = yoob.makeSelect(subPanel, 'example source:', []);
+
+    var displayContainer = yoob.makeDiv();
+    displayContainer.id = 'display_container';
+
+    var programDisplay = yoob.makePre(displayContainer);
+    programDisplay.id = 'program_display';
+
+    var editor = yoob.makeTextArea(displayContainer, 40, 25);
+
+    var stateDisplay = yoob.makeDiv();
+    stateDisplay.id = "state_display";
+
+    var opTableDisplay = yoob.makePre(stateDisplay);
+    opTableDisplay.id = 'op_table_display';
+
+    var tapeSubDisplay = yoob.makeDiv(stateDispay);
+    yoob.makeSpan(tapeSubDisplay, "Tape:");
+    var tapeDisplay = yoob.makeSpan(tapeSubDisplay);
+
+    var ioSubDisplay = yoob.makeDiv(stateDispay);
+    ioSubDisplay.innerHTML = 'Input: <input id="input"></input><br />' +
+                             'Output: <div id="output">';
+
+    new yoob.PlayfieldHTMLView().init({
+      element: programDisplay
     });
     var opTableView = new yoob.PlayfieldHTMLView().init({
-      element: document.getElementById('op_table_display')
+      element: opTableDisplay
     });
     opTableView.render = function(value) {
           return ' ' + value + ' ';
     };
     var tapeView = new yoob.TapeHTMLView().init({
-      element: document.getElementById('tape_display')
+      element: tapeDisplay
     });
 
-    var controlPanel = document.getElementById("panel_container");
-    var editor = document.getElementById("editor");
-    var display = document.getElementById("program_display");
-
+    /* ----- launch, phase 2: connect the controller ----- */
     var WunnelController = getWunnelControllerClass();
     var controller = (new WunnelController()).init({
         programView: programView,
@@ -49,7 +74,7 @@ function launch(prefix, container, config) {
     var sourceManager = (new yoob.SourceManager()).init({
         panelContainer: controlPanel,
         editor: editor,
-        hideDuringEdit: [display],
+        hideDuringEdit: [programDisplay],
         disableDuringEdit: [controller.panel],
         storageKey: 'wunnel.js',
         onDone: function() {
@@ -57,7 +82,7 @@ function launch(prefix, container, config) {
         }
     });
     var p = (new yoob.PresetManager()).init({
-      selectElem: document.getElementById('select_source'),
+      selectElem: selectSource,
       controller: controller
     });
     function makeCallback(sourceText) {
