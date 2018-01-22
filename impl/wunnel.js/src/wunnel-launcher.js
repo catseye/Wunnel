@@ -13,7 +13,7 @@ function launch(prefix, container, config) {
     "yoob/controller.js",
     "yoob/source-manager.js",
     "yoob/preset-manager.js",
-    "wunnel-controller.js"
+    "wunnel.js"
   ];
   var loaded = 0;
   var onload = function() {
