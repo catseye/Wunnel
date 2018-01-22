@@ -25,7 +25,7 @@ function launch(prefix, container, config) {
     var subPanel = yoob.makeDiv(container);
     var selectSource = yoob.makeSelect(subPanel, 'example source:', []);
 
-    var displayContainer = yoob.makeDiv();
+    var displayContainer = yoob.makeDiv(container);
     displayContainer.id = 'display_container';
 
     var programDisplay = yoob.makePre(displayContainer);
@@ -33,21 +33,21 @@ function launch(prefix, container, config) {
 
     var editor = yoob.makeTextArea(displayContainer, 40, 25);
 
-    var stateDisplay = yoob.makeDiv();
+    var stateDisplay = yoob.makeDiv(displayContainer);
     stateDisplay.id = "state_display";
 
     var opTableDisplay = yoob.makePre(stateDisplay);
     opTableDisplay.id = 'op_table_display';
 
-    var tapeSubDisplay = yoob.makeDiv(stateDispay);
+    var tapeSubDisplay = yoob.makeDiv(stateDisplay);
     yoob.makeSpan(tapeSubDisplay, "Tape:");
     var tapeDisplay = yoob.makeSpan(tapeSubDisplay);
 
-    var ioSubDisplay = yoob.makeDiv(stateDispay);
+    var ioSubDisplay = yoob.makeDiv(stateDisplay);
     ioSubDisplay.innerHTML = 'Input: <input id="input"></input><br />' +
                              'Output: <div id="output">';
 
-    new yoob.PlayfieldHTMLView().init({
+    var programView = new yoob.PlayfieldHTMLView().init({
       element: programDisplay
     });
     var opTableView = new yoob.PlayfieldHTMLView().init({
