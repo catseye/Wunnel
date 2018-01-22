@@ -6,25 +6,20 @@
 if (window.yoob === undefined) yoob = {};
 
 /*
- * A view (in the MVC sense) for depicting a yoob.Playfield (-compatible)
+ * A view (in the MVC sense) for depicting a yoob.Tape (-compatible)
  * object onto any DOM element that supports innerHTML.
  */
-yoob.PlayfieldHTMLView = function() {
+yoob.TapeHTMLView = function() {
     this.init = function(cfg) {
-        this.pf = cfg.playfield;
+        this.tape = cfg.tape;
         this.element = cfg.element;
         return this;
     };
 
     /*** Chainable setters ***/
 
-    this.setPlayfield = function(pf) {
-        this.pf = pf;
-        return this;
-    };
-
-    this.setElement = function(element) {
-        this.element = element;
+    this.setTape = function(tape) {
+        this.tape = tape;
         return this;
     };
 
@@ -37,7 +32,7 @@ yoob.PlayfieldHTMLView = function() {
     };
 
     /*
-     * Override to convert Playfield values to HTML.
+     * Convert Tape values to HTML.  Override to customize appearance.
      */
     this.render = function(value) {
         if (value === undefined) return ' ';
@@ -54,29 +49,22 @@ yoob.PlayfieldHTMLView = function() {
     };
 
     /*
-     * Render the playfield, as HTML, on the DOM element.
+     * Render the Tape, as HTML, on the DOM element.
+     * TODO: make this not awful.
      */
     this.draw = function() {
+        var cursors = this.tape.cursors;
         var text = "";
-        var cursors = this.pf.cursors;
-        var lowerY = this.pf.getLowerY();
-        var upperY = this.pf.getUpperY();
-        var lowerX = this.pf.getLowerX();
-        var upperX = this.pf.getUpperX();
-        for (var y = lowerY; y <= upperY; y++) {
-            var row = "";
-            for (var x = lowerX; x <= upperX; x++) {
-                var rendered = this.render(this.pf.get(x, y));
-                for (var i = 0; i < cursors.length; i++) {
-                    if (cursors[i].x === x && cursors[i].y === y) {
-                        rendered = this.wrapCursorText(cursors[i], rendered);
-                    }
+        var $this = this;
+        this.tape.foreach(function(pos, value) {
+            var rendered = $this.render(value);
+            for (var i = 0; i < cursors.length; i++) {
+                if (cursors[i].getX() === pos) {
+                    rendered = $this.wrapCursorText(cursors[i], rendered);
                 }
-                row += rendered;
             }
-            text += row + "\n";
-        }
+            text += rendered + "<br/>";
+        }, { dense: true });
         this.element.innerHTML = text;
     };
-
 };

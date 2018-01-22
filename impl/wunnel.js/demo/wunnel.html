@@ -3,115 +3,56 @@
   <meta charset="utf-8">
   <title>Wunnel</title>
   <style>
-#program { display: none; }
-#load { display: none; }
+#display_container {
+  display: flex;
+}
 #program_display {
-    color: white;
-    background: blue;
-    border: 3px solid blue;
-    font-family: monospace;
-    float: left;
+  color: white;
+  background: blue;
+  border: 3px solid blue;
+  font-family: monospace;
+  display: inline-block;
+  flex: 1 1 auto;
+}
+textarea {
+  display: inline-block;
+  flex: 1 1 auto;
 }
 #state_display {
-    float: left;
-    margin-left: 1em;
+  margin-left: 1em;
+  display: inline-block;
+  flex: 0 1 auto;
 }
 #op_table_display {
-    color: black;
-    background: white;
-    border: 3px solid red;
-    font-family: monospace;
-    text-align: center;
+  color: black;
+  background: white;
+  border: 3px solid red;
+  font-family: monospace;
+  text-align: center;
 }
 #tape_display {
-    border: 1px solid black;
+  border: 1px solid black;
 }
 #output {
-    color: white;
-    background: #008000;
-    border: 3px solid #008000;
-    font-family: monospace;
+  color: white;
+  background: #008000;
+  border: 3px solid #008000;
+  font-family: monospace;
 }
-#canvas { border: 1px solid blue; display: none; }
+#canvas {
+  border: 1px solid blue; display: none;
+}
   </style>
 </head>
 <body>
 
 <h1>Wunnel</h1>
 
-<button id="load">Load</button>
-<button id="edit">Edit</button>
-<button id="start">Start</button>
-<button id="stop">Stop</button>
-<button id="reset">Reset</button>
-<button id="step">Step</button>
-Speed: <input id="speed" type="range" min="0" max="200" value="0" />
-
-<div>
-  example source: <select id="select_source"></select>
-</div>
-
-<div id="display_container">
-  <pre id="program_display"></pre>
-  <div id="state_display">
-    <pre id="op_table_display"></pre>
-    Tape: <canvas id="tape_display" width="400" height="100"></canvas><br />
-    Input: <input id="input"></input><br />
-    Output: <div id="output"></div>
-  </div>
-</div>
-
-<textarea id="program" rows="25" cols="40"></textarea>
+<div id="container"></div>
 
 </body>
-<script src="../src/yoob/playfield.js"></script>
-<script src="../src/yoob/playfield-html-view.js"></script>
-<script src="../src/yoob/cursor.js"></script>
-<script src="../src/yoob/tape.js"></script>
-<script src="../src/yoob/controller.js"></script>
-<script src="../src/yoob/preset-manager.js"></script>
-<script src="../src/wunnel-controller.js"></script>
+<script src="../src/wunnel-launcher.js"></script>
 <script src="../../../eg/index.js"></script>
 <script>
-  var programView = new yoob.PlayfieldHTMLView().init(
-    null, document.getElementById('program_display')
-  );
-  var opTableView = new yoob.PlayfieldHTMLView().init(
-    null, document.getElementById('op_table_display')
-  );
-  opTableView.render = function(value) {
-        return ' ' + value + ' ';
-  };
-  var c = (new WunnelController()).init({
-      programView: programView,
-      opTableView: opTableView,
-      tapeCanvas: document.getElementById("tape_display"),
-      inputElem: document.getElementById("input"),
-      outputElem: document.getElementById("output")
-  });
-  c.connect({
-    'start': 'start',
-    'stop': 'stop',
-    'reset': 'reset',
-    'step': 'step',
-    'load': 'load',
-    'edit': 'edit',
-    'speed': 'speed',
-    'source': 'program',
-    'display': 'display_container'
-  });
-  c.click_load();
-  var p = (new yoob.PresetManager()).init({
-    selectElem: document.getElementById('select_source'),
-    controller: c
-  });
-  function makeCallback(sourceText) {
-    return function(id) {
-      c.loadSource(sourceText);
-    }
-  }
-  for (var i = 0; i < examplePrograms.length; i++) {
-    p.add(examplePrograms[i][0], makeCallback(examplePrograms[i][1]));
-  }
-  p.select(examplePrograms[0][0]);
+  launch('../src/', 'container');
 </script>
