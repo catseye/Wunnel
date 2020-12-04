@@ -1,6 +1,13 @@
 Wunnel
 ======
 
+_Try it online_ [@ catseye.tc](https://catseye.tc/installation/Wunnel)
+| _Wiki entry_ [@ esolangs.org](https://esolangs.org/wiki/Wunnel)
+| _See also:_ [Etcha](https://github.com/catseye/Etcha#readme)
+∘ [Gemooy](https://github.com/catseye/Gemooy#readme)
+
+- - - -
+
 This is the reference distribution of Wunnel, an esoteric programming
 language.
 
