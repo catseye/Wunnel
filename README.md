@@ -3,8 +3,8 @@ Wunnel
 
 _Try it online_ [@ catseye.tc](https://catseye.tc/installation/Wunnel)
 | _Wiki entry_ [@ esolangs.org](https://esolangs.org/wiki/Wunnel)
-| _See also:_ [Etcha](https://github.com/catseye/Etcha#readme)
-∘ [Gemooy](https://github.com/catseye/Gemooy#readme)
+| _See also:_ [Etcha](https://codeberg.org/catseye/Etcha#the-etcha-programming-language)
+∘ [Gemooy](https://codeberg.org/catseye/Gemooy#gemooy)
 
 - - - -
 
@@ -21,8 +21,9 @@ At present, it contains:
 It's all in the public domain; see the file UNLICENSE for more information.
 
 There is also a public-domain implementation of Wunnel in Java included
-in [the yoob distribution](https://github.com/catseye/yoob).
+in [the yoob distribution][].
 
 [Wunnel article]: http://esolangs.org/wiki/Wunnel
 [yoob]: http://catseye.tc/node/yoob
 [yoob.js]: http://catseye.tc/node/yoob.js
+[the yoob distribution]: https://catseye.tc/distribution/yoob_distribution
